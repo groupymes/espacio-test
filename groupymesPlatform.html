@@ -1,0 +1,707 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Groupymes</title>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,400;0,600;0,700;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --cream: #F5F0E8;
+    --cream-dark: #EDE6D6;
+    --ink: #1A1612;
+    --ink-mid: #3D3530;
+    --ink-light: #7A6E66;
+    --accent: #C84B2F;
+    --accent-light: #F0E8E5;
+    --accent-mid: #E8956A;
+    --green: #2D6A4F;
+    --green-light: #E8F2ED;
+    --blue: #1B4F8A;
+    --blue-light: #E6EEF8;
+    --gold: #B8860B;
+    --gold-light: #FDF5DC;
+    --border: rgba(26,22,18,0.12);
+    --border-strong: rgba(26,22,18,0.25);
+    --ff-display: 'Fraunces', serif;
+    --ff-body: 'DM Sans', sans-serif;
+    --r-sm: 6px;
+    --r-md: 10px;
+    --r-lg: 16px;
+    --r-xl: 24px;
+    --shadow: 0 2px 12px rgba(26,22,18,0.08);
+    --shadow-lg: 0 8px 32px rgba(26,22,18,0.12);
+  }
+  body { font-family: var(--ff-body); background: var(--cream); color: var(--ink); min-height: 100vh; }
+  
+  /* NAV */
+  nav { background: var(--ink); padding: 0 2rem; display: flex; align-items: center; justify-content: space-between; height: 60px; position: sticky; top: 0; z-index: 100; }
+  .nav-logo { font-family: var(--ff-display); font-size: 1.5rem; font-weight: 700; color: var(--cream); letter-spacing: -0.02em; cursor: pointer; }
+  .nav-logo span { color: var(--accent-mid); }
+  .nav-links { display: flex; gap: 0.25rem; align-items: center; }
+  .nav-link { color: rgba(245,240,232,0.7); font-size: 0.875rem; font-weight: 500; padding: 0.4rem 0.75rem; border-radius: var(--r-sm); cursor: pointer; transition: all 0.15s; border: none; background: none; }
+  .nav-link:hover { color: var(--cream); background: rgba(255,255,255,0.08); }
+  .nav-link.active { color: var(--cream); }
+  .nav-actions { display: flex; gap: 0.5rem; align-items: center; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; padding: 0.5rem 1rem; border-radius: var(--r-sm); font-family: var(--ff-body); font-size: 0.875rem; font-weight: 500; cursor: pointer; transition: all 0.15s; border: none; }
+  .btn-ghost { background: transparent; color: rgba(245,240,232,0.8); border: 1px solid rgba(245,240,232,0.2); }
+  .btn-ghost:hover { background: rgba(255,255,255,0.08); color: var(--cream); }
+  .btn-primary { background: var(--accent); color: white; }
+  .btn-primary:hover { background: #B03F25; }
+  .btn-secondary { background: var(--cream); color: var(--ink); }
+  .btn-secondary:hover { background: var(--cream-dark); }
+  .btn-outline { background: transparent; color: var(--ink); border: 1.5px solid var(--border-strong); }
+  .btn-outline:hover { background: var(--cream-dark); }
+  .btn-success { background: var(--green); color: white; }
+  .btn-success:hover { background: #235A40; }
+  .btn-lg { padding: 0.75rem 1.5rem; font-size: 1rem; border-radius: var(--r-md); }
+
+  /* VIEWS */
+  .view { display: none; animation: fadeIn 0.2s ease; }
+  .view.active { display: block; }
+  @keyframes fadeIn { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: translateY(0); } }
+
+  /* HERO */
+  .hero { background: var(--ink); color: var(--cream); padding: 5rem 2rem 4rem; text-align: center; position: relative; overflow: hidden; }
+  .hero::before { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 70% 30%, rgba(200,75,47,0.15) 0%, transparent 60%), radial-gradient(ellipse at 20% 80%, rgba(27,79,138,0.1) 0%, transparent 50%); pointer-events: none; }
+  .hero-eyebrow { display: inline-block; font-size: 0.75rem; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-mid); margin-bottom: 1.5rem; padding: 0.35rem 0.75rem; border: 1px solid rgba(232,149,106,0.3); border-radius: 99px; }
+  .hero h1 { font-family: var(--ff-display); font-size: clamp(2.5rem, 5vw, 4rem); font-weight: 700; line-height: 1.1; margin-bottom: 1.25rem; max-width: 700px; margin-left: auto; margin-right: auto; }
+  .hero h1 em { font-style: italic; color: var(--accent-mid); }
+  .hero p { font-size: 1.1rem; color: rgba(245,240,232,0.7); max-width: 520px; margin: 0 auto 2.5rem; line-height: 1.6; }
+  .hero-actions { display: flex; gap: 0.75rem; justify-content: center; flex-wrap: wrap; }
+  .hero-stats { display: flex; gap: 3rem; justify-content: center; margin-top: 4rem; padding-top: 2.5rem; border-top: 1px solid rgba(245,240,232,0.1); }
+  .hero-stat-n { font-family: var(--ff-display); font-size: 2rem; font-weight: 700; color: var(--cream); }
+  .hero-stat-l { font-size: 0.8rem; color: rgba(245,240,232,0.5); margin-top: 0.2rem; letter-spacing: 0.05em; }
+
+  /* SEARCH BAR */
+  .search-section { background: var(--cream); padding: 1.75rem 2rem; border-bottom: 1px solid var(--border); }
+  .search-bar { max-width: 860px; margin: 0 auto; display: flex; gap: 0.75rem; align-items: center; }
+  .search-input-wrap { flex: 1; position: relative; }
+  .search-input-wrap svg { position: absolute; left: 0.875rem; top: 50%; transform: translateY(-50%); color: var(--ink-light); pointer-events: none; }
+  .search-input { width: 100%; padding: 0.65rem 0.875rem 0.65rem 2.5rem; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); font-family: var(--ff-body); font-size: 0.95rem; background: white; color: var(--ink); outline: none; transition: border-color 0.15s; }
+  .search-input:focus { border-color: var(--accent); }
+  .search-select { padding: 0.65rem 0.875rem; border: 1.5px solid var(--border-strong); border-radius: var(--r-md); font-family: var(--ff-body); font-size: 0.875rem; background: white; color: var(--ink); outline: none; cursor: pointer; min-width: 140px; }
+  .filter-chips { display: flex; gap: 0.5rem; max-width: 860px; margin: 0.875rem auto 0; flex-wrap: wrap; }
+  .chip { padding: 0.3rem 0.75rem; border-radius: 99px; font-size: 0.8rem; font-weight: 500; cursor: pointer; border: 1.5px solid var(--border); background: white; color: var(--ink-mid); transition: all 0.15s; }
+  .chip:hover { border-color: var(--accent); color: var(--accent); }
+  .chip.active { background: var(--accent); border-color: var(--accent); color: white; }
+
+  /* LISTING GRID */
+  .listing-section { max-width: 1100px; margin: 0 auto; padding: 2rem; }
+  .section-header { display: flex; align-items: baseline; justify-content: space-between; margin-bottom: 1.5rem; }
+  .section-title { font-family: var(--ff-display); font-size: 1.5rem; font-weight: 600; }
+  .section-count { font-size: 0.85rem; color: var(--ink-light); }
+  .listing-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 1.25rem; }
+  
+  /* CARD */
+  .card { background: white; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.5rem; cursor: pointer; transition: all 0.2s; position: relative; overflow: hidden; }
+  .card:hover { border-color: var(--border-strong); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
+  .card-badge { display: inline-flex; align-items: center; gap: 0.3rem; padding: 0.25rem 0.6rem; border-radius: 99px; font-size: 0.7rem; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-bottom: 1rem; }
+  .badge-service { background: var(--blue-light); color: var(--blue); }
+  .badge-demand { background: var(--green-light); color: var(--green); }
+  .badge-job { background: var(--gold-light); color: var(--gold); }
+  .card-header { display: flex; align-items: flex-start; gap: 0.875rem; margin-bottom: 0.875rem; }
+  .avatar { width: 42px; height: 42px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-family: var(--ff-display); font-weight: 700; font-size: 1rem; flex-shrink: 0; }
+  .card-title { font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600; line-height: 1.3; margin-bottom: 0.2rem; }
+  .card-company { font-size: 0.8rem; color: var(--ink-light); font-weight: 500; }
+  .card-desc { font-size: 0.875rem; color: var(--ink-mid); line-height: 1.6; margin-bottom: 1rem; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
+  .card-meta { display: flex; align-items: center; gap: 0.875rem; font-size: 0.78rem; color: var(--ink-light); flex-wrap: wrap; }
+  .card-meta span { display: flex; align-items: center; gap: 0.3rem; }
+  .card-footer { display: flex; align-items: center; justify-content: space-between; margin-top: 1rem; padding-top: 1rem; border-top: 1px solid var(--border); }
+  .price-tag { font-family: var(--ff-display); font-size: 1.1rem; font-weight: 600; color: var(--ink); }
+  .price-tag small { font-family: var(--ff-body); font-size: 0.75rem; font-weight: 400; color: var(--ink-light); }
+  .lock-overlay { font-size: 0.8rem; color: var(--ink-light); display: flex; align-items: center; gap: 0.3rem; }
+
+  /* DETAIL VIEW */
+  .detail-back { display: inline-flex; align-items: center; gap: 0.5rem; color: var(--ink-light); font-size: 0.875rem; cursor: pointer; padding: 0.4rem 0; margin-bottom: 1.5rem; border: none; background: none; font-family: var(--ff-body); transition: color 0.15s; }
+  .detail-back:hover { color: var(--ink); }
+  .detail-layout { display: grid; grid-template-columns: 1fr 340px; gap: 2rem; }
+  .detail-main { background: white; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 2rem; }
+  .detail-sidebar { display: flex; flex-direction: column; gap: 1.25rem; }
+  .sidebar-card { background: white; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.5rem; }
+  .detail-title { font-family: var(--ff-display); font-size: 1.75rem; font-weight: 700; margin: 1rem 0 0.5rem; line-height: 1.2; }
+  .detail-company-row { display: flex; align-items: center; gap: 0.75rem; margin-bottom: 1.5rem; }
+  .detail-avatar { width: 48px; height: 48px; border-radius: var(--r-sm); display: flex; align-items: center; justify-content: center; font-family: var(--ff-display); font-weight: 700; font-size: 1.2rem; }
+  .detail-section-title { font-weight: 600; font-size: 0.85rem; text-transform: uppercase; letter-spacing: 0.06em; color: var(--ink-light); margin-bottom: 0.75rem; margin-top: 1.5rem; }
+  .detail-tags { display: flex; flex-wrap: wrap; gap: 0.5rem; }
+  .tag { padding: 0.35rem 0.75rem; background: var(--cream-dark); border-radius: var(--r-sm); font-size: 0.8rem; color: var(--ink-mid); font-weight: 500; }
+  .login-prompt { text-align: center; padding: 1.5rem; background: var(--cream); border-radius: var(--r-md); border: 1.5px dashed var(--border-strong); }
+  .login-prompt h4 { font-family: var(--ff-display); font-size: 1.1rem; margin-bottom: 0.5rem; }
+  .login-prompt p { font-size: 0.85rem; color: var(--ink-light); margin-bottom: 1rem; line-height: 1.5; }
+  .login-prompt .actions { display: flex; gap: 0.5rem; justify-content: center; }
+  .divider { height: 1px; background: var(--border); margin: 1.25rem 0; }
+  .info-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0; font-size: 0.875rem; border-bottom: 1px solid var(--border); }
+  .info-row:last-child { border-bottom: none; }
+  .info-label { color: var(--ink-light); }
+  .info-value { font-weight: 500; }
+
+  /* AUTH MODAL */
+  .modal-backdrop { display: none; position: fixed; inset: 0; background: rgba(26,22,18,0.5); z-index: 200; align-items: center; justify-content: center; }
+  .modal-backdrop.open { display: flex; }
+  .modal { background: white; border-radius: var(--r-xl); padding: 2.5rem; width: 420px; max-width: 90vw; position: relative; }
+  .modal-close { position: absolute; top: 1.25rem; right: 1.25rem; background: none; border: none; cursor: pointer; color: var(--ink-light); font-size: 1.25rem; line-height: 1; padding: 0.25rem; }
+  .modal-close:hover { color: var(--ink); }
+  .modal-logo { font-family: var(--ff-display); font-size: 1.3rem; font-weight: 700; margin-bottom: 1.5rem; }
+  .modal-logo span { color: var(--accent); }
+  .modal h2 { font-family: var(--ff-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.4rem; }
+  .modal p { font-size: 0.875rem; color: var(--ink-light); margin-bottom: 1.75rem; }
+  .form-group { margin-bottom: 1rem; }
+  .form-label { display: block; font-size: 0.8rem; font-weight: 600; color: var(--ink-mid); margin-bottom: 0.4rem; letter-spacing: 0.02em; }
+  .form-input { width: 100%; padding: 0.65rem 0.875rem; border: 1.5px solid var(--border-strong); border-radius: var(--r-sm); font-family: var(--ff-body); font-size: 0.95rem; background: white; color: var(--ink); outline: none; transition: border-color 0.15s; }
+  .form-input:focus { border-color: var(--accent); }
+  .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; }
+  .modal-switch { text-align: center; font-size: 0.85rem; color: var(--ink-light); margin-top: 1.25rem; }
+  .modal-switch a { color: var(--accent); cursor: pointer; font-weight: 500; text-decoration: none; }
+  .modal-switch a:hover { text-decoration: underline; }
+  .divider-label { display: flex; align-items: center; gap: 0.75rem; margin: 1.25rem 0; font-size: 0.8rem; color: var(--ink-light); }
+  .divider-label::before, .divider-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  /* PUBLISH VIEW */
+  .publish-container { max-width: 700px; margin: 0 auto; padding: 2rem; }
+  .publish-tabs { display: flex; gap: 0.5rem; margin-bottom: 2rem; padding: 0.35rem; background: var(--cream-dark); border-radius: var(--r-md); width: fit-content; }
+  .publish-tab { padding: 0.5rem 1.25rem; border-radius: var(--r-sm); font-size: 0.875rem; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--ink-mid); transition: all 0.15s; }
+  .publish-tab.active { background: white; color: var(--ink); box-shadow: 0 1px 4px rgba(26,22,18,0.1); }
+  .form-section { background: white; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 1.75rem; margin-bottom: 1rem; }
+  .form-section-title { font-family: var(--ff-display); font-size: 1.05rem; font-weight: 600; margin-bottom: 1.25rem; padding-bottom: 0.75rem; border-bottom: 1px solid var(--border); }
+  .form-textarea { width: 100%; padding: 0.65rem 0.875rem; border: 1.5px solid var(--border-strong); border-radius: var(--r-sm); font-family: var(--ff-body); font-size: 0.95rem; background: white; color: var(--ink); outline: none; resize: vertical; min-height: 100px; transition: border-color 0.15s; }
+  .form-textarea:focus { border-color: var(--accent); }
+  .form-select { width: 100%; padding: 0.65rem 0.875rem; border: 1.5px solid var(--border-strong); border-radius: var(--r-sm); font-family: var(--ff-body); font-size: 0.95rem; background: white; color: var(--ink); outline: none; cursor: pointer; }
+  .char-count { font-size: 0.75rem; color: var(--ink-light); text-align: right; margin-top: 0.25rem; }
+  .form-hint { font-size: 0.8rem; color: var(--ink-light); margin-top: 0.3rem; }
+
+  /* PROFILE */
+  .profile-container { max-width: 900px; margin: 0 auto; padding: 2rem; }
+  .profile-header { background: white; border: 1px solid var(--border); border-radius: var(--r-lg); padding: 2rem; display: flex; gap: 1.5rem; align-items: flex-start; margin-bottom: 1.5rem; }
+  .profile-avatar { width: 80px; height: 80px; border-radius: var(--r-md); display: flex; align-items: center; justify-content: center; font-family: var(--ff-display); font-size: 2rem; font-weight: 700; flex-shrink: 0; background: var(--blue-light); color: var(--blue); }
+  .profile-name { font-family: var(--ff-display); font-size: 1.5rem; font-weight: 700; margin-bottom: 0.25rem; }
+  .profile-type { font-size: 0.85rem; color: var(--ink-light); }
+  .profile-meta { display: flex; gap: 1.5rem; margin-top: 0.75rem; flex-wrap: wrap; }
+  .profile-meta span { font-size: 0.85rem; color: var(--ink-mid); display: flex; align-items: center; gap: 0.35rem; }
+  .profile-tabs { display: flex; gap: 0; border-bottom: 2px solid var(--border); margin-bottom: 1.5rem; }
+  .profile-tab { padding: 0.75rem 1.25rem; font-size: 0.9rem; font-weight: 500; cursor: pointer; border: none; background: none; color: var(--ink-light); border-bottom: 2.5px solid transparent; margin-bottom: -2px; transition: all 0.15s; }
+  .profile-tab.active { color: var(--accent); border-bottom-color: var(--accent); }
+  .empty-state { text-align: center; padding: 3rem 1rem; color: var(--ink-light); }
+  .empty-state h3 { font-family: var(--ff-display); font-size: 1.2rem; color: var(--ink-mid); margin-bottom: 0.5rem; }
+  .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 1rem; margin-bottom: 1.5rem; }
+  .stat-card { background: white; border: 1px solid var(--border); border-radius: var(--r-md); padding: 1.25rem; text-align: center; }
+  .stat-n { font-family: var(--ff-display); font-size: 2rem; font-weight: 700; }
+  .stat-l { font-size: 0.78rem; color: var(--ink-light); margin-top: 0.2rem; }
+
+  /* Toast */
+  .toast { position: fixed; bottom: 1.5rem; right: 1.5rem; background: var(--ink); color: var(--cream); padding: 0.875rem 1.25rem; border-radius: var(--r-md); font-size: 0.875rem; z-index: 300; opacity: 0; transform: translateY(8px); transition: all 0.25s; pointer-events: none; max-width: 320px; }
+  .toast.show { opacity: 1; transform: translateY(0); }
+  .toast.success { background: var(--green); }
+  .toast.error { background: var(--accent); }
+
+  /* Responsive helpers */
+  @media (max-width: 640px) { 
+    .detail-layout { grid-template-columns: 1fr; }
+    .hero-stats { gap: 1.5rem; }
+    .stats-grid { grid-template-columns: repeat(2, 1fr); }
+    .form-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo" onclick="navigate('home')">Group<span>ymes</span></div>
+  <div class="nav-links">
+    <button class="nav-link" onclick="navigate('home')">Explorar</button>
+    <button class="nav-link" onclick="requireAuth('publish')">Publicar</button>
+    <button class="nav-link" onclick="requireAuth('profile')">Mi perfil</button>
+  </div>
+  <div class="nav-actions" id="nav-actions">
+    <button class="btn btn-ghost" onclick="openModal('login')">Iniciar sesión</button>
+    <button class="btn btn-primary" onclick="openModal('register')">Registrarse</button>
+  </div>
+</nav>
+
+<!-- VIEWS -->
+<!-- HOME -->
+<div class="view active" id="view-home">
+  <div class="hero">
+    <div class="hero-eyebrow">Red B2B para pymes y autónomos</div>
+    <h1>El mercado donde las <em>pequeñas empresas</em> se encuentran</h1>
+    <p>Ofrece tus servicios, encuentra proveedores de confianza y conecta con oportunidades en tu sector y zona.</p>
+    <div class="hero-actions">
+      <button class="btn btn-primary btn-lg" onclick="navigate('home'); setTimeout(()=>document.getElementById('search-kw').focus(),100)">Buscar servicios</button>
+      <button class="btn btn-ghost btn-lg" onclick="requireAuth('publish')">Publicar una oferta</button>
+    </div>
+    <div class="hero-stats">
+      <div><div class="hero-stat-n">2.400+</div><div class="hero-stat-l">Publicaciones activas</div></div>
+      <div><div class="hero-stat-n">18 sectores</div><div class="hero-stat-l">Cubiertos</div></div>
+      <div><div class="hero-stat-n">340 municipios</div><div class="hero-stat-l">En España</div></div>
+    </div>
+  </div>
+
+  <div class="search-section">
+    <div class="search-bar">
+      <div class="search-input-wrap" style="flex:2">
+        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+        <input class="search-input" id="search-kw" placeholder="Ej: diseño web, asesoría fiscal, carpintería..." oninput="filterCards()">
+      </div>
+      <select class="search-select" id="filter-sector" onchange="filterCards()">
+        <option value="">Todos los sectores</option>
+        <option>Tecnología & Digital</option>
+        <option>Construcción & Reforma</option>
+        <option>Asesoría & Legal</option>
+        <option>Marketing & Comunicación</option>
+        <option>Logística & Transporte</option>
+        <option>Hostelería & Restauración</option>
+        <option>Salud & Bienestar</option>
+        <option>Formación & Consultoría</option>
+      </select>
+      <select class="search-select" id="filter-loc" onchange="filterCards()">
+        <option value="">Toda España</option>
+        <option>Madrid</option>
+        <option>Barcelona</option>
+        <option>Valencia</option>
+        <option>Sevilla</option>
+        <option>Zaragoza</option>
+        <option>Bilbao</option>
+      </select>
+    </div>
+    <div class="filter-chips">
+      <div class="chip active" onclick="setType(this,'')">Todo</div>
+      <div class="chip" onclick="setType(this,'service')">● Oferta de servicio</div>
+      <div class="chip" onclick="setType(this,'demand')">● Demanda de servicio</div>
+      <div class="chip" onclick="setType(this,'job')">● Empleo</div>
+    </div>
+  </div>
+
+  <div class="listing-section">
+    <div class="section-header">
+      <span class="section-title">Publicaciones recientes</span>
+      <span class="section-count" id="count-label">12 resultados</span>
+    </div>
+    <div class="listing-grid" id="listing-grid"></div>
+  </div>
+</div>
+
+<!-- DETAIL -->
+<div class="view" id="view-detail">
+  <div class="listing-section" style="padding-top:1.5rem">
+    <button class="detail-back" onclick="navigate('home')">← Volver al listado</button>
+    <div class="detail-layout" id="detail-content"></div>
+  </div>
+</div>
+
+<!-- PUBLISH -->
+<div class="view" id="view-publish">
+  <div class="publish-container">
+    <h2 style="font-family:var(--ff-display);font-size:1.75rem;font-weight:700;margin-bottom:0.4rem">Nueva publicación</h2>
+    <p style="color:var(--ink-light);margin-bottom:1.75rem;font-size:0.9rem">Llega a miles de empresas y autónomos de tu sector</p>
+    <div class="publish-tabs">
+      <button class="publish-tab active" onclick="setPubType(this,'service')">Oferta de servicio</button>
+      <button class="publish-tab" onclick="setPubType(this,'demand')">Demanda de servicio</button>
+      <button class="publish-tab" onclick="setPubType(this,'job')">Empleo</button>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title">Información básica</div>
+      <div class="form-group">
+        <label class="form-label">Título de la publicación</label>
+        <input class="form-input" id="pub-title" placeholder="Ej: Desarrollo de tienda online con Shopify" maxlength="80" oninput="updateChar(this,'char-title',80)">
+        <div class="char-count"><span id="char-title">0</span>/80</div>
+      </div>
+      <div class="form-group">
+        <label class="form-label">Descripción</label>
+        <textarea class="form-textarea" id="pub-desc" placeholder="Describe el servicio, qué incluye, tu experiencia..." maxlength="1000" oninput="updateChar(this,'char-desc',1000)" style="min-height:130px"></textarea>
+        <div class="char-count"><span id="char-desc">0</span>/1000</div>
+      </div>
+    </div>
+    <div class="form-section">
+      <div class="form-section-title">Sector y ubicación</div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Sector</label>
+          <select class="form-select" id="pub-sector">
+            <option value="">Selecciona sector</option>
+            <option>Tecnología & Digital</option>
+            <option>Construcción & Reforma</option>
+            <option>Asesoría & Legal</option>
+            <option>Marketing & Comunicación</option>
+            <option>Logística & Transporte</option>
+            <option>Hostelería & Restauración</option>
+            <option>Salud & Bienestar</option>
+            <option>Formación & Consultoría</option>
+          </select>
+        </div>
+        <div class="form-group">
+          <label class="form-label">Localidad</label>
+          <input class="form-input" id="pub-loc" placeholder="Ej: Madrid, Barcelona...">
+        </div>
+      </div>
+      <div class="form-row">
+        <div class="form-group">
+          <label class="form-label">Modalidad</label>
+          <select class="form-select" id="pub-mode">
+            <option>Presencial</option>
+            <option>Remoto</option>
+            <option>Híbrido</option>
+          </select>
+        </div>
+        <div class="form-group" id="price-group">
+          <label class="form-label">Precio (€)</label>
+          <input class="form-input" id="pub-price" type="number" placeholder="Ej: 1200">
+          <div class="form-hint">Deja en blanco si es bajo presupuesto</div>
+        </div>
+      </div>
+    </div>
+    <div style="display:flex;justify-content:flex-end;gap:0.75rem;margin-top:0.5rem">
+      <button class="btn btn-outline" onclick="navigate('home')">Cancelar</button>
+      <button class="btn btn-success btn-lg" onclick="submitPublish()">Publicar ahora</button>
+    </div>
+  </div>
+</div>
+
+<!-- PROFILE -->
+<div class="view" id="view-profile">
+  <div class="profile-container">
+    <div class="profile-header">
+      <div class="profile-avatar" id="prof-avatar">AB</div>
+      <div>
+        <div class="profile-name" id="prof-name">Ana Blanco</div>
+        <div class="profile-type">Autónoma · Tecnología & Digital</div>
+        <div class="profile-meta">
+          <span>📍 Madrid</span>
+          <span>🕐 Miembro desde ene 2024</span>
+          <span>⭐ 4.8 (12 valoraciones)</span>
+        </div>
+        <div style="margin-top:1rem;display:flex;gap:0.5rem">
+          <button class="btn btn-outline" onclick="openModal('editProfile')">Editar perfil</button>
+          <button class="btn btn-primary" onclick="navigate('publish')">Nueva publicación</button>
+        </div>
+      </div>
+    </div>
+    <div class="stats-grid">
+      <div class="stat-card"><div class="stat-n" style="color:var(--blue)">3</div><div class="stat-l">Publicaciones activas</div></div>
+      <div class="stat-card"><div class="stat-n" style="color:var(--green)">18</div><div class="stat-l">Contactos recibidos</div></div>
+      <div class="stat-card"><div class="stat-n" style="color:var(--gold)">247</div><div class="stat-l">Vistas este mes</div></div>
+    </div>
+    <div class="profile-tabs">
+      <button class="profile-tab active" onclick="setProfileTab(this,'pub')">Mis publicaciones</button>
+      <button class="profile-tab" onclick="setProfileTab(this,'saved')">Guardados</button>
+    </div>
+    <div id="profile-content"></div>
+  </div>
+</div>
+
+<!-- AUTH MODAL -->
+<div class="modal-backdrop" id="modal" onclick="closeModalBg(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-logo">Group<span>ymes</span></div>
+    <div id="modal-body"></div>
+  </div>
+</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+const AVATARS = [
+  {bg:'#E6EEF8',fg:'#185FA5'},{bg:'#E8F2ED',fg:'#2D6A4F'},{bg:'#FAEEDA',fg:'#854F0B'},
+  {bg:'#FBEAF0',fg:'#993556'},{bg:'#F0E8E5',fg:'#993C1D'},{bg:'#EEF8E6',fg:'#3B6D11'}
+];
+function avStyle(i){const a=AVATARS[i%AVATARS.length];return `background:${a.bg};color:${a.fg}`;}
+function initials(name){return name.split(' ').map(w=>w[0]).join('').toUpperCase().slice(0,2);}
+
+const LISTINGS = [
+  {id:1,type:'service',title:'Desarrollo web full-stack',company:'Nexio Digital SL',initials:'ND',avatar:0,desc:'Creamos aplicaciones web a medida con React, Node.js y bases de datos en cloud. Más de 80 proyectos entregados para pymes.',sector:'Tecnología & Digital',location:'Madrid',mode:'Remoto',price:'Desde 2.400€',tags:['React','Node.js','AWS','eCommerce']},
+  {id:2,type:'demand',title:'Buscamos asesoría fiscal para startup',company:'Foodly SL',initials:'FO',avatar:1,desc:'Startup de alimentación en fase seed busca asesor fiscal con experiencia en startups para llevar declaraciones trimestrales y optimización.',sector:'Asesoría & Legal',location:'Barcelona',mode:'Híbrido',price:'Presupuesto abierto',tags:['Fiscal','Startup','Trimestral']},
+  {id:3,type:'job',title:'Técnico/a de instalaciones eléctricas',company:'Elecsa Reforma',initials:'ER',avatar:2,desc:'Empresa de reformas integrales busca técnico electricista con carné profesional para incorporación inmediata en obras residenciales.',sector:'Construcción & Reforma',location:'Valencia',mode:'Presencial',price:'24.000–28.000€/año',tags:['Electricidad','Reforma','Carné profesional']},
+  {id:4,type:'service',title:'Gestión de redes sociales para restaurantes',company:'Social Gastro',initials:'SG',avatar:3,desc:'Especialistas en marketing digital para el sector hostelero. Gestionamos Instagram, TikTok y Google My Business de forma mensual.',sector:'Marketing & Comunicación',location:'Sevilla',mode:'Remoto',price:'350€/mes',tags:['Instagram','TikTok','Hostelería','GMB']},
+  {id:5,type:'service',title:'Transporte refrigerado última milla',company:'FríoLogistic SAU',initials:'FL',avatar:4,desc:'Flota propia de vehículos refrigerados para distribución de productos frescos en área metropolitana. Certificados ATP.',sector:'Logística & Transporte',location:'Madrid',mode:'Presencial',price:'Bajo presupuesto',tags:['Refrigerado','Distribución','Certificado ATP']},
+  {id:6,type:'demand',title:'Necesitamos proveedor de packaging sostenible',company:'Naturalia Foods',initials:'NF',avatar:5,desc:'Fabricante de alimentos ecológicos busca proveedor de envases compostables o reciclados para relanzamiento de línea premium.',sector:'Logística & Transporte',location:'Zaragoza',mode:'Presencial',price:'Volumen alto',tags:['Packaging','Sostenible','Ecológico']},
+  {id:7,type:'service',title:'Consultoría de transformación digital',company:'Alvaro Moreno Consultor',initials:'AM',avatar:0,desc:'Ayudo a pymes a digitalizar procesos, seleccionar herramientas y formar a equipos. +15 años en consultoría tecnológica para empresas industriales.',sector:'Formación & Consultoría',location:'Bilbao',mode:'Híbrido',price:'1.200€/proyecto',tags:['Transformación digital','Industria','Procesos']},
+  {id:8,type:'job',title:'Community Manager con inglés avanzado',company:'Innova Brand Agency',initials:'IB',avatar:1,desc:'Agencia de comunicación busca CM con inglés C1+ para gestionar cuentas de clientes internacionales. Valorable experiencia en sector tech.',sector:'Marketing & Comunicación',location:'Barcelona',mode:'Híbrido',price:'22.000–26.000€/año',tags:['Community Manager','Inglés','Agencia']},
+  {id:9,type:'service',title:'Fisioterapia empresarial in-company',company:'Saludhabitat SCP',initials:'SH',avatar:2,desc:'Programas de fisioterapia en las instalaciones de tu empresa. Reducción del absentismo laboral y mejora del bienestar del equipo.',sector:'Salud & Bienestar',location:'Madrid',mode:'Presencial',price:'480€/mes',tags:['Fisioterapia','Empresas','Bienestar']},
+  {id:10,type:'service',title:'Diseño y producción de carta de restaurante',company:'Menú Studio',initials:'MS',avatar:3,desc:'Diseñamos cartas físicas y digitales con QR para hostelería. Incluye fotografía de platos, redacción y materiales de impresión premium.',sector:'Hostelería & Restauración',location:'Valencia',mode:'Remoto',price:'590€',tags:['Diseño','Carta','QR','Hostelería']},
+  {id:11,type:'demand',title:'Buscamos empresa de mantenimiento HVAC',company:'Hotel Costa Blanca SA',initials:'HC',avatar:4,desc:'Hotel de 120 habitaciones busca empresa de mantenimiento preventivo y correctivo de sistemas de climatización para contrato anual.',sector:'Construcción & Reforma',location:'Valencia',mode:'Presencial',price:'Contrato anual',tags:['HVAC','Climatización','Mantenimiento','Hotel']},
+  {id:12,type:'job',title:'Abogado/a mercantil junior',company:'Pérez & Asociados',initials:'PA',avatar:5,desc:'Despacho especializado en derecho mercantil busca abogado/a para incorporación al equipo. Se valorará máster en empresa.',sector:'Asesoría & Legal',location:'Madrid',mode:'Presencial',price:'28.000–32.000€/año',tags:['Derecho mercantil','Junior','Despacho']}
+];
+
+let currentUser = null;
+let currentType = '';
+let activeProfileTab = 'pub';
+let currentPublishType = 'service';
+
+function navigate(view) {
+  document.querySelectorAll('.view').forEach(v => v.classList.remove('active'));
+  document.getElementById('view-' + view).classList.add('active');
+  window.scrollTo(0, 0);
+  if (view === 'home') renderCards(LISTINGS);
+  if (view === 'profile') renderProfile();
+}
+
+function requireAuth(view) {
+  if (!currentUser) { openModal('login'); window._pendingNav = view; return; }
+  navigate(view);
+}
+
+function setType(el, type) {
+  currentType = type;
+  document.querySelectorAll('.chip').forEach(c => c.classList.remove('active'));
+  el.classList.add('active');
+  filterCards();
+}
+
+function filterCards() {
+  const kw = (document.getElementById('search-kw').value || '').toLowerCase();
+  const sector = document.getElementById('filter-sector').value;
+  const loc = document.getElementById('filter-loc').value;
+  const filtered = LISTINGS.filter(l => {
+    if (currentType && l.type !== currentType) return false;
+    if (sector && l.sector !== sector) return false;
+    if (loc && l.location !== loc) return false;
+    if (kw && !l.title.toLowerCase().includes(kw) && !l.desc.toLowerCase().includes(kw) && !l.tags.join(' ').toLowerCase().includes(kw)) return false;
+    return true;
+  });
+  renderCards(filtered);
+}
+
+function renderCards(list) {
+  const grid = document.getElementById('listing-grid');
+  document.getElementById('count-label').textContent = list.length + ' resultado' + (list.length !== 1 ? 's' : '');
+  if (!list.length) { grid.innerHTML = '<div style="grid-column:1/-1;text-align:center;padding:3rem;color:var(--ink-light)"><div style="font-size:2rem;margin-bottom:0.75rem">🔍</div><div style="font-weight:500;margin-bottom:0.4rem">Sin resultados</div><div style="font-size:0.875rem">Prueba con otros filtros</div></div>'; return; }
+  grid.innerHTML = list.map(l => cardHTML(l)).join('');
+}
+
+function cardHTML(l) {
+  const badgeClass = {service:'badge-service',demand:'badge-demand',job:'badge-job'}[l.type];
+  const badgeLabel = {service:'Oferta de servicio',demand:'Demanda de servicio',job:'Empleo'}[l.type];
+  return `<div class="card" onclick="openDetail(${l.id})">
+    <div class="card-badge ${badgeClass}">${badgeLabel}</div>
+    <div class="card-header">
+      <div class="avatar" style="${avStyle(l.avatar)}">${l.initials}</div>
+      <div>
+        <div class="card-title">${l.title}</div>
+        <div class="card-company">${l.company}</div>
+      </div>
+    </div>
+    <div class="card-desc">${l.desc}</div>
+    <div class="card-meta">
+      <span>🏷 ${l.sector}</span>
+      <span>📍 ${l.location}</span>
+      <span>💻 ${l.mode}</span>
+    </div>
+    <div class="card-footer">
+      <span class="price-tag">${l.price}</span>
+      ${currentUser ? '<button class="btn btn-primary" style="font-size:0.8rem;padding:0.4rem 0.85rem" onclick="event.stopPropagation();openDetail('+l.id+')">Ver detalle →</button>' : '<span class="lock-overlay">🔒 Inicia sesión para ver más</span>'}
+    </div>
+  </div>`;
+}
+
+function openDetail(id) {
+  const l = LISTINGS.find(x => x.id === id);
+  if (!l) return;
+  const badgeClass = {service:'badge-service',demand:'badge-demand',job:'badge-job'}[l.type];
+  const badgeLabel = {service:'Oferta de servicio',demand:'Demanda de servicio',job:'Empleo'}[l.type];
+  const contactSection = currentUser
+    ? `<div class="sidebar-card">
+        <div style="font-weight:600;margin-bottom:1rem">Contactar</div>
+        <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-bottom:0.5rem" onclick="showToast('Mensaje enviado correctamente','success')">Enviar mensaje</button>
+        <button class="btn btn-outline btn-lg" style="width:100%;justify-content:center" onclick="showToast('Guardado en favoritos')">Guardar</button>
+      </div>`
+    : `<div class="sidebar-card login-prompt">
+        <h4>Inicia sesión para contactar</h4>
+        <p>Crea una cuenta gratuita para acceder a todos los detalles y contactar directamente con ${l.company}.</p>
+        <div class="actions">
+          <button class="btn btn-primary" onclick="openModal('login')">Iniciar sesión</button>
+          <button class="btn btn-outline" onclick="openModal('register')">Registrarse</button>
+        </div>
+      </div>`;
+  document.getElementById('detail-content').innerHTML = `
+    <div class="detail-main">
+      <div class="card-badge ${badgeClass}">${badgeLabel}</div>
+      <div class="detail-title">${l.title}</div>
+      <div class="detail-company-row">
+        <div class="detail-avatar" style="${avStyle(l.avatar)}">${l.initials}</div>
+        <div>
+          <div style="font-weight:600">${l.company}</div>
+          <div style="font-size:0.8rem;color:var(--ink-light)">Publicado hace 3 días</div>
+        </div>
+      </div>
+      <div class="divider"></div>
+      <p style="line-height:1.7;color:var(--ink-mid)">${l.desc} Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed commodo lorem non finibus tincidunt. Nunc vel mi eu mauris facilisis ultrices. Cras dapibus nisi vel sollicitudin commodo.</p>
+      <div class="detail-section-title">Etiquetas</div>
+      <div class="detail-tags">${l.tags.map(t=>`<span class="tag">${t}</span>`).join('')}</div>
+      <div class="detail-section-title">Detalles</div>
+      <div class="info-row"><span class="info-label">Sector</span><span class="info-value">${l.sector}</span></div>
+      <div class="info-row"><span class="info-label">Ubicación</span><span class="info-value">${l.location}</span></div>
+      <div class="info-row"><span class="info-label">Modalidad</span><span class="info-value">${l.mode}</span></div>
+      <div class="info-row"><span class="info-label">Precio / Salario</span><span class="info-value">${l.price}</span></div>
+    </div>
+    <div class="detail-sidebar">
+      ${contactSection}
+      <div class="sidebar-card">
+        <div style="font-weight:600;margin-bottom:0.75rem">Acerca de ${l.company}</div>
+        <div style="font-size:0.85rem;color:var(--ink-mid);line-height:1.6">Empresa activa en Groupymes desde enero de 2024 con ${Math.floor(Math.random()*8)+2} publicaciones.</div>
+        <div class="divider"></div>
+        <div style="font-size:0.82rem;color:var(--ink-light)">📍 ${l.location} &nbsp;·&nbsp; 💻 ${l.mode}</div>
+      </div>
+    </div>`;
+  navigate('detail');
+}
+
+// AUTH MODALS
+const loginHTML = () => `
+  <h2>Bienvenido/a</h2>
+  <p>Accede a tu cuenta para contactar y publicar</p>
+  <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" id="login-email" type="email" placeholder="tu@empresa.com"></div>
+  <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" id="login-pw" type="password" placeholder="••••••••"></div>
+  <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="doLogin()">Iniciar sesión</button>
+  <div class="divider-label">o</div>
+  <div class="modal-switch">¿No tienes cuenta? <a onclick="switchModal('register')">Regístrate gratis</a></div>`;
+
+const registerHTML = () => `
+  <h2>Crear cuenta</h2>
+  <p>Únete a la red de pymes y autónomos</p>
+  <div class="form-row">
+    <div class="form-group"><label class="form-label">Nombre</label><input class="form-input" id="reg-name" placeholder="Ana"></div>
+    <div class="form-group"><label class="form-label">Apellidos</label><input class="form-input" id="reg-surname" placeholder="Blanco"></div>
+  </div>
+  <div class="form-group"><label class="form-label">Empresa / Nombre profesional</label><input class="form-input" id="reg-company" placeholder="Mi Empresa SL o tu nombre"></div>
+  <div class="form-group"><label class="form-label">Correo electrónico</label><input class="form-input" id="reg-email" type="email" placeholder="tu@empresa.com"></div>
+  <div class="form-group"><label class="form-label">Contraseña</label><input class="form-input" id="reg-pw" type="password" placeholder="Mínimo 8 caracteres"></div>
+  <div class="form-group">
+    <label class="form-label">Tipo de cuenta</label>
+    <select class="form-input" id="reg-type"><option>Autónomo/a</option><option>Pyme (SL/SA)</option><option>Asociación</option></select>
+  </div>
+  <button class="btn btn-primary btn-lg" style="width:100%;justify-content:center;margin-top:0.5rem" onclick="doRegister()">Crear cuenta gratuita</button>
+  <div class="modal-switch">¿Ya tienes cuenta? <a onclick="switchModal('login')">Inicia sesión</a></div>`;
+
+function openModal(type) {
+  document.getElementById('modal').classList.add('open');
+  if (type === 'login') document.getElementById('modal-body').innerHTML = loginHTML();
+  else if (type === 'register') document.getElementById('modal-body').innerHTML = registerHTML();
+}
+function closeModal() { document.getElementById('modal').classList.remove('open'); }
+function closeModalBg(e) { if (e.target === document.getElementById('modal')) closeModal(); }
+function switchModal(type) { openModal(type); }
+
+function doLogin() {
+  const email = document.getElementById('login-email')?.value;
+  if (!email) { showToast('Introduce tu correo electrónico', 'error'); return; }
+  currentUser = { name: 'Ana Blanco', email, company: 'Ana Blanco Freelance' };
+  closeModal();
+  updateNavAuth();
+  showToast('¡Bienvenida de nuevo, Ana!', 'success');
+  filterCards();
+  if (window._pendingNav) { navigate(window._pendingNav); window._pendingNav = null; }
+}
+
+function doRegister() {
+  const name = document.getElementById('reg-name')?.value;
+  const company = document.getElementById('reg-company')?.value;
+  if (!name || !company) { showToast('Rellena todos los campos obligatorios', 'error'); return; }
+  currentUser = { name: name + ' ' + (document.getElementById('reg-surname')?.value || ''), company };
+  closeModal();
+  updateNavAuth();
+  showToast('¡Cuenta creada! Bienvenido/a a Groupymes', 'success');
+  filterCards();
+  if (window._pendingNav) { navigate(window._pendingNav); window._pendingNav = null; }
+}
+
+function updateNavAuth() {
+  if (!currentUser) return;
+  const na = document.getElementById('nav-actions');
+  const n = initials(currentUser.name);
+  na.innerHTML = `<div style="display:flex;align-items:center;gap:0.75rem">
+    <span style="font-size:0.85rem;color:rgba(245,240,232,0.7)">${currentUser.name.split(' ')[0]}</span>
+    <div style="width:34px;height:34px;border-radius:50%;background:var(--accent);color:white;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:0.8rem;cursor:pointer" onclick="navigate('profile')">${n}</div>
+    <button class="btn btn-ghost" style="font-size:0.8rem" onclick="logout()">Salir</button>
+  </div>`;
+}
+
+function logout() {
+  currentUser = null;
+  document.getElementById('nav-actions').innerHTML = `
+    <button class="btn btn-ghost" onclick="openModal('login')">Iniciar sesión</button>
+    <button class="btn btn-primary" onclick="openModal('register')">Registrarse</button>`;
+  navigate('home');
+  showToast('Sesión cerrada');
+}
+
+// PUBLISH
+function setPubType(el, type) {
+  currentPublishType = type;
+  document.querySelectorAll('.publish-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  const priceG = document.getElementById('price-group');
+  if (type === 'job') { priceG.querySelector('.form-label').textContent = 'Salario anual (€)'; priceG.querySelector('input').placeholder = 'Ej: 28000'; }
+  else if (type === 'demand') { priceG.querySelector('.form-label').textContent = 'Presupuesto máx (€)'; priceG.querySelector('input').placeholder = 'Deja en blanco si es abierto'; }
+  else { priceG.querySelector('.form-label').textContent = 'Precio (€)'; priceG.querySelector('input').placeholder = 'Ej: 1200'; }
+}
+
+function updateChar(el, spanId, max) {
+  document.getElementById(spanId).textContent = el.value.length;
+}
+
+function submitPublish() {
+  const title = document.getElementById('pub-title').value;
+  const desc = document.getElementById('pub-desc').value;
+  const sector = document.getElementById('pub-sector').value;
+  const loc = document.getElementById('pub-loc').value;
+  if (!title || !desc || !sector || !loc) { showToast('Rellena todos los campos obligatorios', 'error'); return; }
+  const newListing = {
+    id: LISTINGS.length + 1,
+    type: currentPublishType,
+    title, company: currentUser.company,
+    initials: initials(currentUser.name),
+    avatar: Math.floor(Math.random() * 6),
+    desc, sector, location: loc,
+    mode: document.getElementById('pub-mode').value,
+    price: document.getElementById('pub-price').value ? document.getElementById('pub-price').value + '€' : 'Bajo presupuesto',
+    tags: sector.split('&').map(s => s.trim())
+  };
+  LISTINGS.unshift(newListing);
+  showToast('¡Publicación creada con éxito!', 'success');
+  navigate('home');
+}
+
+// PROFILE
+function renderProfile() {
+  if (!currentUser) return;
+  document.getElementById('prof-name').textContent = currentUser.name;
+  document.getElementById('prof-avatar').textContent = initials(currentUser.name);
+  renderProfileContent();
+}
+
+function setProfileTab(el, tab) {
+  activeProfileTab = tab;
+  document.querySelectorAll('.profile-tab').forEach(t => t.classList.remove('active'));
+  el.classList.add('active');
+  renderProfileContent();
+}
+
+function renderProfileContent() {
+  const c = document.getElementById('profile-content');
+  const myListings = LISTINGS.filter(l => l.company === (currentUser?.company || 'Ana Blanco Freelance'));
+  if (activeProfileTab === 'pub') {
+    if (!myListings.length) {
+      c.innerHTML = `<div class="empty-state"><h3>Sin publicaciones</h3><p>Crea tu primera publicación para aparecer en el mercado</p><button class="btn btn-primary" style="margin-top:1rem" onclick="navigate('publish')">Crear publicación</button></div>`;
+    } else {
+      c.innerHTML = `<div class="listing-grid">${myListings.map(l => cardHTML(l)).join('')}</div>`;
+    }
+  } else {
+    c.innerHTML = `<div class="empty-state"><h3>Sin guardados</h3><p>Guarda publicaciones para volver a verlas después</p></div>`;
+  }
+}
+
+function showToast(msg, type = '') {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.className = 'toast' + (type ? ' ' + type : '');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// INIT
+renderCards(LISTINGS);
+</script>
+</body>
+</html>
